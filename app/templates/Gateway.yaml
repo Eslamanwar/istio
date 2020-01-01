@@ -1,0 +1,21 @@
+{{- $conf := index .Values .Values.global.env -}}
+{{- $def := index .Values "default" -}}
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: {{ template "gateway-service.fullname" . }}-gateway
+  labels:
+    app: {{ template "gateway-service.name" . }}
+    chart: {{ template "gateway-service.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  selector:
+    istio: ingressgateway # use Istio default gateway implementation
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "{{ default $def.ext_hostname $conf.ext_hostname }}"

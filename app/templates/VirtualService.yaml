@@ -1,0 +1,20 @@
+{{- $conf := index .Values .Values.global.env -}}
+{{- $def := index .Values "default" -}}
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: {{ template "gateway-service.fullname" . }}
+spec:
+  hosts:
+  - "{{ default $def.ext_hostname $conf.ext_hostname }}"
+  gateways:
+  - {{ template "gateway-service.fullname" . }}-gateway
+  http:
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        port:
+          number: 8083
+        host: "{{ default $def.service_name $conf.service_name }}"
