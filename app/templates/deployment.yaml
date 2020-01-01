@@ -1,6 +1,6 @@
 {{- $conf := index .Values .Values.global.env -}}
 {{- $def := index .Values "default" -}}
-apiVersion: apps/v1
+apiVersion: apps/v1beta2
 kind: Deployment
 metadata:
   name: {{ template "gateway-service.fullname" . }}
