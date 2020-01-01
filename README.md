@@ -1,6 +1,7 @@
 # istio
 
 ## Installing Helm
+```
 cd /tmp
 curl https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get > install-helm.sh
 chmod u+x install-helm.sh
@@ -9,7 +10,7 @@ chmod u+x install-helm.sh
 kubectl -n kube-system create serviceaccount tiller
 kubectl create clusterrolebinding tiller --clusterrole cluster-admin --serviceaccount=kube-system:tiller
 helm init --service-account tiller
-
+```
 
 
 
@@ -81,8 +82,10 @@ kubectl get pods -n istio-system
 
 
 ## Deploying Application
+```
 cd ./app
 helm install ./
+```
 
 
 
@@ -90,13 +93,14 @@ helm install ./
 
 
 ## test the application with the istio Gateway
+```
 export INGRESS_HOST=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
 export INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="http2")].port}')
 export SECURE_INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="https")].port}')
 
-as i changed the values file with hostname=example.com
+# as i changed the values file with hostname=example.com
 curl -I -HHost:example.com http://$INGRESS_HOST:$INGRESS_PORT/
-
+```
 
 
 
@@ -121,10 +125,10 @@ cd ../istio_installation/istio-1.4.2
 
 - Generating traces:
 To see trace data, you must send requests to your service. The number of requests depends on Istio’s sampling rate. You set this rate when you install Istio. The default sampling rate is 1%. You need to send at least 100 requests before the first trace is visible. 
-
+```
 export GATEWAY_URL=$INGRESS_HOST:$INGRESS_PORT
 for i in `seq 1 100`; do curl -s -o /dev/null http://$GATEWAY_URL/; done
-
+```
 
 
 
