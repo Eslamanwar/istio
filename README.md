@@ -20,10 +20,10 @@ helm init --service-account tiller
 
 
 ## Deploying istio
-cd ../istio_installation/
 
 - add istio to your helm repo:
 ```
+cd ../istio_installation/
 helm repo add istio.io https://storage.googleapis.com/istio-release/releases/1.4.2/charts/
 helm repo update
 ```
@@ -61,8 +61,9 @@ kubectl get svc istio-ingressgateway -n istio-system
 
 
 - Ensure the corresponding Kubernetes pods are deployed and have a STATUS of Running:
+```
 kubectl get pods -n istio-system
-
+```
 
 
 
@@ -106,10 +107,11 @@ curl -I -HHost:example.com http://$INGRESS_HOST:$INGRESS_PORT/
 
 
 ## Enable distributed-tracing with jaeger
-cd ../istio_installation/istio-1.4.2
+
 
 - install the jaeger tracing dashboard
 ```
+cd ../istio_installation/istio-1.4.2
 ./bin/istioctl manifest apply --set values.tracing.enabled=true --set values.tracing.ingress.enabled=true 
 ```
 - it may give errors depending on your k8s cluster version but you can ignore it
