@@ -158,9 +158,10 @@ for i in `seq 1 100`; do curl -s -o /dev/null http://$GATEWAY_URL/; done
 - All internal services within the mesh should naturally talk to each other.
 - but istio simplifies configuration of service-level properties like circuit breakers, timeouts, and retries
 - Set default routes for authentication-service
-- define a proper route rule for the service in the VirtualService definition. For example, add a simple route rule for 
+- define a proper route rule for the service in the VirtualService definition. For example, add a simple route rule:
 
 ```
+cat << EOF | kubectl apply -f -
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
@@ -173,6 +174,7 @@ spec:
     - destination:
         host: authentication-service
         subset: v1
+EOF
 ```
 
 
