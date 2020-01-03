@@ -19,3 +19,14 @@ spec:
       protocol: HTTP
     hosts:
     - "{{ default $def.ext_hostname $conf.ext_hostname }}"
+    tls:
+      httpsRedirect: true # sends 301 redirect for http requests
+  - port:
+      number: 443
+      name: https-443
+      protocol: HTTPS
+    hosts:
+    - "{{ default $def.ext_hostname $conf.ext_hostname }}"
+    tls:
+      mode: SIMPLE # enables HTTPS on this port
+      credentialName: "{{ default $def.tls_secret_name $conf.tls_secret_name }}"  # fetches certs from Kubernetes secret      

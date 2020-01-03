@@ -85,6 +85,19 @@ kubectl get pods -n istio-system
 ## Deploying Application
 ```
 cd ./app
+
+## Generate a self-signed certificate for testing 
+
+export CERT_NAME=example.com-tls
+export KEY_FILE=example.com.csr
+export CERT_FILE=example.com.crt
+export HOST=example.com
+
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ${KEY_FILE} -out ${CERT_FILE} -subj "/CN=${HOST}/O=${HOST}"
+kubectl create secret tls ${CERT_NAME} --key ${KEY_FILE} --cert ${CERT_FILE}
+
+
+## i added variable in values file called (tls_secret_name) which should contain the name of the created k8s secret which contains the TLS certificate
 helm install ./
 ```
 
@@ -140,6 +153,27 @@ for i in `seq 1 100`; do curl -s -o /dev/null http://$GATEWAY_URL/; done
 
 
 
+
+## adding Default route for Authentication service
+- All internal services within the mesh should naturally talk to each other.
+- but istio simplifies configuration of service-level properties like circuit breakers, timeouts, and retries
+- Set default routes for authentication-service
+- define a proper route rule for the service in the VirtualService definition. For example, add a simple route rule for 
+
+```
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: authentication-service
+spec:
+  hosts:
+  - authentication-service
+  http:
+  - route:
+    - destination:
+        host: authentication-service
+        subset: v1
+```
 
 
 
