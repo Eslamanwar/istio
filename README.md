@@ -233,7 +233,7 @@ kubectl get -n {ingress controller namespace } deploy  {ingress controller Deplo
 
 - if you have another deployment that you want to intergrate linkerd with:
 ```
-kubectl get -n {Namespace} deploy {Deployment_Name}-o yaml \
+kubectl get -n {Namespace} deploy {Deployment_Name} -o yaml \
   | linkerd inject - \
   | kubectl apply -f -
 ```
