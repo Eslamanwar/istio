@@ -254,6 +254,9 @@ helm install ./
 ```
 linkerd dashboard                       # launch the dashboard
 ```
+![alt text](https://github.com/Eslamanwar/istio/blob/master/images/linkerd1.png?raw=true)
+![alt text](https://github.com/Eslamanwar/istio/blob/master/images/linkerd2.png?raw=true)
+
 
 - check that linkerd is added to existing services
 ```
@@ -278,7 +281,7 @@ linkerd -n {namespace} tap deploy/web
 
 
 
-
+![alt text](https://github.com/Eslamanwar/istio/blob/master/images/grafana.png?raw=true)
 
 
 
