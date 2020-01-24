@@ -211,7 +211,7 @@ linkerd dashboard                       # launch the dashboard
 ```
 - injecting Linkerd into your ingress controller's pods
 ```
-kubectl get -n {ingress controller namespace } deploy  {ingress controller Deployment name}-o yaml \
+kubectl get -n {ingress controller namespace } deploy  {ingress controller Deployment name} -o yaml \
   | linkerd inject - \
   | kubectl apply -f -
 ```
