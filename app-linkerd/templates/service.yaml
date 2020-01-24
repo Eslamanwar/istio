@@ -1,0 +1,20 @@
+{{- $conf := index .Values .Values.global.env -}}
+{{- $def := index .Values "default" -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: "{{ default $def.service_name $conf.service_name }}"
+  labels:
+    app: {{ template "gateway-service.name" . }}
+    chart: {{ template "gateway-service.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  ports:
+    - port: 8083
+      targetPort: root
+      protocol: TCP
+      name: root
+  selector:
+    app: {{ template "gateway-service.name" . }}
+    release: {{ .Release.Name }}

@@ -1,0 +1,29 @@
+{{- $conf := index .Values .Values.global.env -}}
+{{- $def := index .Values "default" -}}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ template "gateway-service.fullname" . }}-ingress
+  labels:
+    app: {{ template "gateway-service.name" . }}
+    chart: {{ template "gateway-service.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  annotations:
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "GET, HEAD, OPTIONS"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "*"
+    nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      proxy_set_header l5d-dst-override $service_name.$namespace.svc.cluster.local:$service_port;
+      grpc_set_header l5d-dst-override $service_name.$namespace.svc.cluster.local:$service_port;
+
+spec:
+  rules:
+  - host: "{{ default $def.ext_hostname $conf.ext_hostname }}"
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: "{{ default $def.service_name $conf.service_name }}"
+          servicePort: 8083

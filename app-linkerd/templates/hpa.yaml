@@ -1,0 +1,27 @@
+{{- $conf := index .Values .Values.global.env -}}
+{{- $def := index .Values "default" -}}
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ template "gateway-service.fullname" . }}
+  labels:
+    app: {{ template "gateway-service.name" . }}
+    chart: {{ template "gateway-service.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ template "gateway-service.fullname" . }}
+  minReplicas: 2
+  maxReplicas: 4
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      targetAverageUtilization: 85
+  - type: Resource
+    resource:
+      name: memory
+      targetAverageValue: 850Mi

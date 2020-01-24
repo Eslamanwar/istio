@@ -183,6 +183,119 @@ EOF
 
 
 
+# Using Linkerd
+## prerequisite
+
+- Check that your k8s version running 1.13 or later 
+```
+kubectl version --short
+```
+ 
+
+
+## Linkerd installation
+```
+curl -sL https://run.linkerd.io/install | sh
+export PATH=$PATH:$HOME/.linkerd2/bin
+linkerd version
+
+# Add the linkerd CLI to your path with:
+export PATH=$PATH:/home/admin-eslam/.linkerd2/bin
+
+
+linkerd check --pre                     # validate that Linkerd can be installed
+linkerd install | kubectl apply -f -    # install the control plane into the 'linkerd' namespace
+linkerd check                           # validate everything worked!
+linkerd dashboard                       # launch the dashboard
+
+```
+- injecting Linkerd into your ingress controller's pods
+```
+kubectl get -n {ingress controller namespace } deploy  {ingress controller Deployment name}-o yaml \
+  | linkerd inject - \
+  | kubectl apply -f -
+```
+
+
+- There is some configuration i added in the your ingress annotation in your app in the helm chart , I added both http and grpc , and Nginx will ingnore the one that you are not using
+```
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      proxy_set_header l5d-dst-override $service_name.$namespace.svc.cluster.local:$service_port;
+      grpc_set_header l5d-dst-override $service_name.$namespace.svc.cluster.local:$service_port;
+
+```
+
+- I also addedd Annotation to your deployment file to enable Linkerd
+```
+      annotations:
+        linkerd.io/inject: enabled
+```
+
+- if you have another deployment that you want to intergrate linkerd with:
+```
+kubectl get -n {Namespace} deploy {Deployment_Name}-o yaml \
+  | linkerd inject - \
+  | kubectl apply -f -
+```
+
+
+
+- Deploying Application
+```
+cd app-linkerd
+helm install ./
+```
+
+
+
+## Watch it run
+
+- Linkerd Dashboard
+```
+linkerd dashboard                       # launch the dashboard
+```
+
+- check that linkerd is added to existing services
+```
+linkerd -n {namespace} check --proxy
+```
+
+
+- to get a real-time view of which paths are being called:
+```
+linkerd -n {namespace} top deploy
+```
+
+
+- To go even deeper, we can use tap shows the stream of requests across a single pod
+```
+linkerd -n {namespace} tap deploy/web
+```
+
+
+
+- About things that happened in the past? Linkerd includes Grafana to visualize the metrics collected by Prometheus, and ships with some pre-configured dashboards. You can get to these by clicking the Grafana icon in the overview page.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

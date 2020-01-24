@@ -1,0 +1,22 @@
+{{- $conf := index .Values .Values.global.env -}}
+{{- $def := index .Values "default" -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "gateway-service.fullname" . }}
+data:
+  CONTAINER_LOGGER_LOGROTATE_STDERR_OPTIONS: "{{ default $def.env_variables.CONTAINER_LOGGER_LOGROTATE_STDERR_OPTIONS $conf.env_variables.CONTAINER_LOGGER_LOGROTATE_STDERR_OPTIONS }}"
+  CONTAINER_LOGGER_LOGROTATE_STDOUT_OPTIONS: "{{ default $def.env_variables.CONTAINER_LOGGER_LOGROTATE_STDOUT_OPTIONS $conf.env_variables.CONTAINER_LOGGER_LOGROTATE_STDOUT_OPTIONS }}"
+  CONTAINER_LOGGER_LOGROTATE_MAX_STDERR_SIZE: "{{ default $def.env_variables.CONTAINER_LOGGER_LOGROTATE_MAX_STDERR_SIZE $conf.env_variables.CONTAINER_LOGGER_LOGROTATE_MAX_STDERR_SIZE }}"
+  CONTAINER_LOGGER_LOGROTATE_MAX_STDOUT_SIZE: "{{ default $def.env_variables.CONTAINER_LOGGER_LOGROTATE_MAX_STDOUT_SIZE $conf.env_variables.CONTAINER_LOGGER_LOGROTATE_MAX_STDOUT_SIZE }}"
+  DEBUG: "{{ default $def.env_variables.DEBUG $conf.env_variables.DEBUG }}"
+  REDIS_HOST: "{{ default $def.env_variables.REDIS_HOST $conf.env_variables.REDIS_HOST }}"
+  REDIS_PORT: "{{ default $def.env_variables.REDIS_PORT $conf.env_variables.REDIS_PORT }}"
+  REDIS_DB: "{{ default $def.env_variables.REDIS_DB $conf.env_variables.REDIS_DB }}"
+  DB_URL: "{{ default $def.env_variables.DB_URL $conf.env_variables.DB_URL }}"
+  NAMING_SERVER: "{{ default $def.env_variables.NAMING_SERVER $conf.env_variables.NAMING_SERVER }}"
+  SHUTDOWN_TIMEOUT: "{{ default $def.env_variables.SHUTDOWN_TIMEOUT $conf.env_variables.SHUTDOWN_TIMEOUT }}"
+  PROFILE: "{{ default $def.env_variables.PROFILE $conf.env_variables.PROFILE }}"
+  TOKEN_ENDPOINT: "{{ default $def.env_variables.TOKEN_ENDPOINT $conf.env_variables.TOKEN_ENDPOINT }}"
+  PUBLIC_KEY_ENDPOINT: "{{ default $def.env_variables.PUBLIC_KEY_ENDPOINT $conf.env_variables.PUBLIC_KEY_ENDPOINT }}"
+

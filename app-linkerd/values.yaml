@@ -1,0 +1,41 @@
+global:
+  env: default
+
+image:
+  repository: 3013552.dkr.ecr.ap-southeast-1.amazonaws.com/gateway-service
+  tag: latest
+  pullPolicy: IfNotPresent
+  image_secret_name: gitlab-registry
+
+default:
+  replicas: 2
+
+  service_name: gateway-service
+
+  api_prefix: "/gateway/"
+
+  ext_hostname: localhost
+
+  memory_limit: 1024Mi
+
+  env_variables:
+    CONTAINER_LOGGER_LOGROTATE_MAX_STDOUT_SIZE: "10MB"
+    CONTAINER_LOGGER_LOGROTATE_MAX_STDERR_SIZE: "10MB"
+    CONTAINER_LOGGER_LOGROTATE_STDOUT_OPTIONS: "rotate 100"
+    CONTAINER_LOGGER_LOGROTATE_STDERR_OPTIONS: "rotate 100"
+    DEBUG: "false"
+    NAMING_SERVER: "http://naming-service:8761/eureka"
+    SHUTDOWN_TIMEOUT: "30"
+    PROFILE: "prod"
+    TOKEN_ENDPOINT: "http://authentication-service:8086/oauth/token"
+    PUBLIC_KEY_ENDPOINT: "http://authentication-service:8086/oauth/token_key"
+
+    
+prod:
+  ext_hostname: "api.a.b.c"
+  env_variables:
+    CONTAINER_LOGGER_LOGROTATE_MAX_STDOUT_SIZE: "10MB"
+    CONTAINER_LOGGER_LOGROTATE_MAX_STDERR_SIZE: "10MB"
+    CONTAINER_LOGGER_LOGROTATE_STDOUT_OPTIONS: "rotate 100"
+    CONTAINER_LOGGER_LOGROTATE_STDERR_OPTIONS: "rotate 100"
+
